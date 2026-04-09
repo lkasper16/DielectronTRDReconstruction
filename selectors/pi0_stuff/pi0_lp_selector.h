@@ -123,6 +123,14 @@ public :
    Float_t         ChargedHypo__TrackBCAL_DeltaPhi[1400000];   //[NumChargedHypos]
    Float_t         ChargedHypo__TrackBCAL_DeltaZ[14000000];   //[NumChargedHypos]
    Float_t         ChargedHypo__TrackFCAL_DOCA[1400000];   //[NumChargedHypos]
+   Int_t		   ChargedHypo__IsTRDMatched[1400000];
+   Int_t           ChargedHypo__NumHits_X_TRD[1400000];
+   Int_t           ChargedHypo__NumHits_Y_TRD[1400000];
+   Int_t           ChargedHypo__NumClusters_X_TRD[1400000];
+   Int_t           ChargedHypo__NumClusters_Y_TRD[1400000];
+   Int_t           ChargedHypo__NumPoints_TRD[1400000];
+   Float_t         ChargedHypo__Extrapolated_X_TRD[1400000];
+   Float_t         ChargedHypo__Extrapolated_Y_TRD[1400000];
    UInt_t          NumCombos;
    Bool_t          IsComboCut[4300000];   //[NumCombos]
    Float_t         RFTime_Measured[4300000];   //[NumCombos]
@@ -203,6 +211,14 @@ public :
    TBranch        *b_ChargedHypo__TrackBCAL_DeltaPhi;   //!
    TBranch        *b_ChargedHypo__TrackBCAL_DeltaZ;   //!
    TBranch        *b_ChargedHypo__TrackFCAL_DOCA;   //!
+   TBranch        *b_ChargedHypo__IsTRDMatched;
+   TBranch        *b_ChargedHypo__NumHits_X_TRD;
+   TBranch        *b_ChargedHypo__NumHits_Y_TRD;
+   TBranch        *b_ChargedHypo__NumClusters_X_TRD;
+   TBranch        *b_ChargedHypo__NumClusters_Y_TRD;
+   TBranch        *b_ChargedHypo__NumPoints_TRD;
+   TBranch        *b_ChargedHypo__Extrapolated_X_TRD;
+   TBranch        *b_ChargedHypo__Extrapolated_Y_TRD;
    TBranch        *b_NumCombos;   //!
    TBranch        *b_IsComboCut;   //!
    TBranch        *b_RFTime_Measured;   //!
@@ -341,6 +357,14 @@ void pi0_lp_selector::Init(TTree *tree)
    fChain->SetBranchAddress("ChargedHypo__TrackBCAL_DeltaPhi", ChargedHypo__TrackBCAL_DeltaPhi, &b_ChargedHypo__TrackBCAL_DeltaPhi);
    fChain->SetBranchAddress("ChargedHypo__TrackBCAL_DeltaZ", ChargedHypo__TrackBCAL_DeltaZ, &b_ChargedHypo__TrackBCAL_DeltaZ);
    fChain->SetBranchAddress("ChargedHypo__TrackFCAL_DOCA", ChargedHypo__TrackFCAL_DOCA, &b_ChargedHypo__TrackFCAL_DOCA);
+   fChain->SetBranchAddress("ChargedHypo__IsTRDMatched", ChargedHypo__IsTRDMatched, &b_ChargedHypo__IsTRDMatched);
+   fChain->SetBranchAddress("ChargedHypo__NumHits_X_TRD", ChargedHypo__NumHits_X_TRD, &b_ChargedHypo__NumHits_X_TRD);
+   fChain->SetBranchAddress("ChargedHypo__NumHits_Y_TRD", ChargedHypo__NumHits_Y_TRD, &b_ChargedHypo__NumHits_Y_TRD);
+   fChain->SetBranchAddress("ChargedHypo__NumClusters_X_TRD", ChargedHypo__NumClusters_X_TRD, &b_ChargedHypo__NumClusters_X_TRD);
+   fChain->SetBranchAddress("ChargedHypo__NumClusters_Y_TRD", ChargedHypo__NumClusters_Y_TRD, &b_ChargedHypo__NumClusters_Y_TRD);
+   fChain->SetBranchAddress("ChargedHypo__NumPoints_TRD", ChargedHypo__NumPoints_TRD, &b_ChargedHypo__NumPoints_TRD);
+   fChain->SetBranchAddress("ChargedHypo__Extrapolated_X_TRD", ChargedHypo__Extrapolated_X_TRD, &b_ChargedHypo__Extrapolated_X_TRD);
+   fChain->SetBranchAddress("ChargedHypo__Extrapolated_Y_TRD", ChargedHypo__Extrapolated_Y_TRD, &b_ChargedHypo__Extrapolated_Y_TRD);
    fChain->SetBranchAddress("NumCombos", &NumCombos, &b_NumCombos);
    fChain->SetBranchAddress("IsComboCut", IsComboCut, &b_IsComboCut);
    fChain->SetBranchAddress("RFTime_Measured", RFTime_Measured, &b_RFTime_Measured);
