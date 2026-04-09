@@ -24,11 +24,11 @@
 //
 
 #include "jpsi_lp_selector.h"
-#include <TH2.h>
+//#include <TH2.h>
 #include <TStyle.h>
-#include <TH1.h>
-#include "TROOT.h"
-#include <iostream>
+//#include <TH1.h>
+//#include "TROOT.h"
+//#include <iostream>
 #include "TMath.h"
 #include "TMatrixD.h"
 #include "TMatrixDLazy.h"
@@ -84,7 +84,8 @@ void jpsi_lp_selector::SlaveBegin(TTree * /*tree*/)
 
    cout<<" begin slave 1 "<<endl;
    TString option = GetOption();
-    fOut = new TFile("jpsi_lp_out2.root", "RECREATE");
+    //fOut = new TFile("jpsi_lp_out2.root", "RECREATE");
+	fOut = new TFile("jpsi_lp_out_RFTest.root", "RECREATE");
     JP = new TTree("JP", "results from JP real data");
 
     JP->Branch("ebeam", &ebeam, "ebeam/F");
@@ -264,19 +265,19 @@ Bool_t jpsi_lp_selector::Process(Long64_t entry)
    
    if(entry==0){
      float rscale=1;
-     if(RunNumber!=old_rn){
+     if((int)RunNumber!=old_rn){
        //cout<<" run, event_no_max="<<old_rn<<" "<<event_no_max<<endl;
        event_no_max=0;
        file_no=0;
        old_rn=RunNumber;
        for (int rnum=0;rnum<rall;rnum++){
-          if(RunNumber==run_polar[rnum]){
+          if((int)RunNumber==run_polar[rnum]){
              pol=polarization[rnum];
              break;
           } 
        }
        for (int rnum=0;rnum<rall_scale;rnum++){
-          if(RunNumber==run_scale[rnum]){
+          if((int)RunNumber==run_scale[rnum]){
              rscale=scale[rnum];
              break;
           } 
@@ -291,7 +292,7 @@ Bool_t jpsi_lp_selector::Process(Long64_t entry)
 //cok test event selection
     bool select_ev=false;
     for (int i=0;i<1000;i++){
-      if(RunNumber==run[i]&&EventNumber==event[i])select_ev=true;
+      if((int)RunNumber==run[i]&&(int)EventNumber==event[i])select_ev=true;
 /*
       if(RunNumber==run[i]){
         if(event[i]!=event2[i]){
@@ -316,8 +317,10 @@ Bool_t jpsi_lp_selector::Process(Long64_t entry)
 
      NumTracks=0.;
      bool old_track;
-     for(int ih=0;ih<NumChargedHypos;ih++){
+     for(int ih=0;ih<(int)NumChargedHypos;ih++){
       float track_no=ChargedHypo__TrackID[ih];
+		//int trdMatches = ChargedHypo__IsTRDMatched[ih];
+		//if (trdMatches !=0) cout<<"***** trdMatches: "<<trdMatches<<endl;
       if(NumTracks==0){
         old_track=false;
       } else {

@@ -5,8 +5,8 @@
 // found on file: phi_timecut.root
 //////////////////////////////////////////////////////////
 
-#ifndef jpsi_lp_selector_h
-#define jpsi_lp_selector_h
+#ifndef pi0_lp_selector_h
+#define pi0_lp_selector_h
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -26,24 +26,19 @@
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
-//ofstream fpolar;
+ofstream fpolar;
 int run_polar[10000];
-float polarization[10000];
+int polarization[10000];
 int rall;
 
-//ofstream fscale;
-int run_scale[10000];
-float scale[10000];
-float escale[10000];
-int rall_scale;
-
-class jpsi_lp_selector : public TSelector {
+class pi0_lp_selector : public TSelector {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
 
     TFile* fOut; //output file
-    TTree* JP; //output tree
+    TTree* Pi0; //output tree
    float ebeam,pp,thp,pep,pem,thep,them,bcalp,fcalp,bcalep,fcalep,fcalem,bcalem,Minv,t,tmin;
+   float pph,thph,tph,bcalph,fcalph,Cinv,Cinv_m;
    float pbcalep,pbcalem,chi2,ndf;
    float fdedxp,cdedxp,fdedxep,cdedxep,fdedxem,cdedxem;
    float ebeam_max;
@@ -59,6 +54,7 @@ public :
    float pp_m,thp_m,pep_m,pem_m,thep_m,them_m,Minv_m,t_m;
    float tp,tep,tem,tp_m,tep_m,tem_m;
    float Theta,php,phep,phem,php_m,phep_m,phem_m;
+   float phph;
    float cthcm,cthcm_m,cthcm_jp,cthcm_jpm,Mrec,Mrec_m,Mrec_a,Mang,Mpt;
    float pxp,pxep,pxem,ptep,ptem;
    float xp,yp,zp,xep,yep,zep,xem,yem,zem,xkf,ykf,zkf;
@@ -140,6 +136,11 @@ public :
    TClonesArray    *Proton__X4_KinFit;
    Float_t         Proton__Beta_Timing_KinFit[4300000];   //[NumCombos]
    Float_t         Proton__ChiSq_Timing_KinFit[4300000];   //[NumCombos]
+   Int_t           Photon__NeutralIndex[4300000];   //[NumCombos]
+   TClonesArray    *Photon__P4_KinFit;
+   TClonesArray    *Photon__X4_KinFit;
+   Float_t         Photon__Beta_Timing_KinFit[4300000];   //[NumCombos]
+   Float_t         Photon__ChiSq_Timing_KinFit[4300000];   //[NumCombos]
 //   TClonesArray    *DecayingJpsi__P4_KinFit;
    Int_t           Electron__ChargedIndex[4300000];   //[NumCombos]
    TClonesArray    *Electron__P4_KinFit;
@@ -215,6 +216,11 @@ public :
    TBranch        *b_Proton__X4_KinFit;   //!
    TBranch        *b_Proton__Beta_Timing_KinFit;   //!
    TBranch        *b_Proton__ChiSq_Timing_KinFit;   //!
+   TBranch        *b_Photon__NeutralIndex;   //!
+   TBranch        *b_Photon__P4_KinFit;   //!
+   TBranch        *b_Photon__X4_KinFit;   //!
+   TBranch        *b_Photon__Beta_Timing_KinFit;   //!
+   TBranch        *b_Photon__ChiSq_Timing_KinFit;   //!
 //   TBranch        *b_DecayingJpsi__P4_KinFit;   //!
    TBranch        *b_Electron__ChargedIndex;   //!
    TBranch        *b_Electron__P4_KinFit;   //!
@@ -227,8 +233,8 @@ public :
    TBranch        *b_Positron__Beta_Timing_KinFit;   //!
    TBranch        *b_Positron__ChiSq_Timing_KinFit;   //!
 
-   jpsi_lp_selector(TTree * /*tree*/ =0) : fChain(0) { }
-   virtual ~jpsi_lp_selector() { }
+   pi0_lp_selector(TTree * /*tree*/ =0) : fChain(0) { }
+   virtual ~pi0_lp_selector() { }
    virtual Int_t   Version() const { return 2; }
    virtual void    Begin(TTree *tree);
    virtual void    SlaveBegin(TTree *tree);
@@ -245,13 +251,13 @@ public :
 
   void Kine(double, TLorentzVector , TLorentzVector , TLorentzVector );
 
-   ClassDef(jpsi_lp_selector,0);
+   ClassDef(pi0_lp_selector,0);
 };
 
 #endif
 
-#ifdef jpsi_lp_selector_cxx
-void jpsi_lp_selector::Init(TTree *tree)
+#ifdef pi0_lp_selector_cxx
+void pi0_lp_selector::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -275,6 +281,8 @@ void jpsi_lp_selector::Init(TTree *tree)
    ComboBeam__X4_KinFit = 0;
    Proton__P4_KinFit = 0;
    Proton__X4_KinFit = 0;
+   Photon__P4_KinFit = 0;
+   Photon__X4_KinFit = 0;
 //   DecayingJpsi__P4_KinFit = 0;
    Electron__P4_KinFit = 0;
    Electron__X4_KinFit = 0;
@@ -346,6 +354,11 @@ void jpsi_lp_selector::Init(TTree *tree)
    fChain->SetBranchAddress("Proton__X4_KinFit", &Proton__X4_KinFit, &b_Proton__X4_KinFit);
    fChain->SetBranchAddress("Proton__Beta_Timing_KinFit", Proton__Beta_Timing_KinFit, &b_Proton__Beta_Timing_KinFit);
    fChain->SetBranchAddress("Proton__ChiSq_Timing_KinFit", Proton__ChiSq_Timing_KinFit, &b_Proton__ChiSq_Timing_KinFit);
+   fChain->SetBranchAddress("Photon__NeutralIndex", Photon__NeutralIndex, &b_Photon__NeutralIndex);
+   fChain->SetBranchAddress("Photon__P4_KinFit", &Photon__P4_KinFit, &b_Photon__P4_KinFit);
+   fChain->SetBranchAddress("Photon__X4_KinFit", &Photon__X4_KinFit, &b_Photon__X4_KinFit);
+   fChain->SetBranchAddress("Photon__Beta_Timing_KinFit", Photon__Beta_Timing_KinFit, &b_Photon__Beta_Timing_KinFit);
+   fChain->SetBranchAddress("Photon__ChiSq_Timing_KinFit", Photon__ChiSq_Timing_KinFit, &b_Photon__ChiSq_Timing_KinFit);
  //  fChain->SetBranchAddress("DecayingJpsi__P4_KinFit", &DecayingJpsi__P4_KinFit, &b_DecayingJpsi__P4_KinFit);
    fChain->SetBranchAddress("Electron__ChargedIndex", Electron__ChargedIndex, &b_Electron__ChargedIndex);
    fChain->SetBranchAddress("Electron__P4_KinFit", &Electron__P4_KinFit, &b_Electron__P4_KinFit);
@@ -360,7 +373,7 @@ void jpsi_lp_selector::Init(TTree *tree)
 
 }
 
-Bool_t jpsi_lp_selector::Notify()
+Bool_t pi0_lp_selector::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -371,4 +384,4 @@ Bool_t jpsi_lp_selector::Notify()
    return kTRUE;
 }
 
-#endif // #ifdef jpsi_lp_selector_cxx
+#endif // #ifdef pi0_lp_selector_cxx

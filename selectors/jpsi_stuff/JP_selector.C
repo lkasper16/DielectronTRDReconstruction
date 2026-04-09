@@ -24,7 +24,7 @@
 //
 
 #include "JP_selector.h"
-#include <TH2.h>
+//#include <TH2.h>
 #include <TStyle.h>
 
 #define PI 3.14159265
@@ -68,12 +68,10 @@ double JP_selector::ecorr(double pp, double thp, double ebeam)
 double minv0=sqrt(-2.*(ebeam+p_mass)*(sqrt(pp*pp+p_mass2)-p_mass)+2.*ebeam*pp*cos(thp));
 double minv1=sqrt(-2.*(ebeam*1.0025+p_mass)*(sqrt(pp*pp+p_mass2)-p_mass)+2.*ebeam*1.0025*pp*cos(thp));
 return minv1-minv0;
-//return minv1;
 }
 double JP_selector::ftmin(double jmass, double ebeam)
 {
 float pmass=0.9383;
-//float jmass=3.097;
 float s=pmass*pmass+2.*pmass*ebeam;
 float ss=sqrt(s);
 float ecm1=(s-pmass*pmass)/2./ss;
@@ -86,7 +84,6 @@ return tmn;
 
 double JP_selector::ftmax(double jmass, double ebeam)  {
 float pmass=0.9383;
-//float jmass=3.097;
 float s=pmass*pmass+2.*pmass*ebeam;
 float ss=sqrt(s);
 float ecm1=(s-pmass*pmass)/2./ss;
@@ -104,22 +101,17 @@ void JP_selector::Begin(TTree * /*tree*/)
    // When running with PROOF Begin() is only called on the client.
    // The tree argument is deprecated (on PROOF 0 is passed).
 
-//cokcok
- nrsigmas = 3.0; //number of sigmas to cut E/p
-// nrsigmas = 6.0; //number of sigmas to cut E/p
- nlsigmas = 3.0; //number of sigmas to cut E/p
-// nlsigmas = 6.0; //number of sigmas to cut E/p
- ndesigmas= 6.0; //number of sigmas for dE/dx cut
+nrsigmas = 3.0; //number of sigmas to cut E/p
+nlsigmas = 3.0; //number of sigmas to cut E/p
+ndesigmas= 6.0; //number of sigmas for dE/dx cut
 
-   TString option = GetOption();
-
+TString option = GetOption();
 
 smgl=2.2;
 tslope=1.;
 ncount=0;
 ncombos=0;
 acombos=0;
-
 
 dsige = new TF1("dsige","0.900-0.412*x+0.038*x*x",8.2,12.);
 sige = new TF1("sige","-0.00902003+0.00111854*x",8.2,12.);
@@ -129,15 +121,13 @@ mcxsec->SetParameters(-899.577,501.601,-115.956,14.2234,-0.976859,0.0356609,-0.0
 
 hflux = new TFile("flux_80bins.root");
 myflux = (TH1F*)hflux->Get("myflux");
-//myflux->Scale(1./myflux->Integral());
-//coldcold cokcok myflux->Scale(1./4.);
 fax = (TAxis*)myflux->GetXaxis();
 
 fcal_bg = new TFile("mPovE_FCAL.root");
 bcal_bg = new TFile("mPovE_BCAL.root");
-   char foutname[80];
-   sprintf(foutname,"s%dde%d.root",(int)nrsigmas,(int)ndesigmas);
-   cout<<foutname<<endl;
+char foutname[80];
+sprintf(foutname,"s%dde%d_test.root",(int)nrsigmas,(int)ndesigmas);
+//cout<<foutname<<endl;
 fout = new TFile(foutname,"recreate");
 bhbg_factorf = (TH1F*)fcal_bg->Get("bhbg_factorf");
 xbhf = (TAxis*)bhbg_factorf->GetXaxis();
@@ -147,10 +137,9 @@ xbhb = (TAxis*)bhbg_factorb->GetXaxis();
 fcalbg = new TF1("fcalbg","0.225530+0.220108*x-0.0881692*x*x",1.2,3.5);
 bcalbg = new TF1("bcalbg","1.79669-2.21354*x+1.09814*x*x-0.173206*x*x*x",1.2,3.5);
 
-
 bcalbg = new TF1("bcalbg","-0.674666+1.62783*x-0.833527*x*x+0.130829*x*x*x",1.2,3.5);
 fcalbg = new TF1("fcalbg","-0.0406324+0.451861*x-0.133072*x*x",1.2,3.5);
-  
+
 //last
 fcalbg = new TF1("fcalbg","0.00576061+0.456857*x-0.1281580*x*x",1.2,3.5);
 bcalbg = new TF1("bcalbg","0.16108+0.198688*x-0.058957*x*x",1.2,3.5);
@@ -170,21 +159,17 @@ void JP_selector::SlaveBegin(TTree * /*tree*/)
    // When running with PROOF SlaveBegin() is called on each slave server.
    // The tree argument is deprecated (on PROOF 0 is passed).
 
-   TString option = GetOption();
+TString option = GetOption();
 
 // defining the cuts:
 
-//cokcok
 theta_cut=2.*PI/180.;
 //theta_cut=0.*PI/180.;
 
-//cokcok
 chi2_cut=5000.;
 //chi2_cut=500.;
 //chi2_cut=12.;
-//chi2_cut=5000.e+10;
 
-//cokcok
 p_cut=0.4;
 //p_cut=0.0;
 
@@ -193,8 +178,6 @@ delta_cut=0.0;
 dedx_cut=3.127e-6-ndesigmas*0.5e-6; //dEdx cut
 
 pbcal_cut=0.03;
-//cokcok
-//pbcal_cut=0.03;
 //pbcal_cut=0.00;
 
 theta_cm_cut = 90.-0.; //in deg
@@ -205,7 +188,6 @@ bh2=2.5;
 // p/E cuts:
 float bm_data0=1.04616;
 float bs_data0=6.82571e-02;
-
 
 float fm_data0=1.07380;
 float fs_data0=3.91639e-02;
@@ -221,12 +203,9 @@ bs_data0=4.960e-02;
 fm_data0= 1.0748;
 fs_data0=5.300e-02;
 
-
-//cokcok
 //no KF
 //fm_data0= 1.0840;
 //fs_data0=13.230e-02;
-
 
 bcut_data0=bm_data0+bs_data0*nrsigmas;
 fcut_data0=fm_data0+fs_data0*nrsigmas;
@@ -236,10 +215,7 @@ fcut_data1=fm_data0-fs_data0*nlsigmas;
 cout<<" bcut0, fcut0 ="<<bcut_data0<<" "<<fcut_data0<<" 1/ "<<1./bcut_data0<<" "<<1./fcut_data0<<endl;
 cout<<" bcut0, fcut0 ="<<bcut_data1<<" "<<fcut_data1<<" 1/ "<<1./bcut_data1<<" "<<1./fcut_data1<<endl;
 
-
-
 // MC scale
-// int events_bh=2248653.;
 int events_bh=2084890;
 events_bh=9393506;
 
@@ -247,12 +223,9 @@ int events_jp=930428+3756692;
 events_jp=394076+1627477; //t2.9
 events_jp=388401+1410042; //t1.4
 events_jp=879306; //t1.4
-//int events_phi=196719.; //old
-//cold int events_phi=160302.+145921.; //2017LIrnd+2017HIrnd >8.2
-int events_phi=160302.+145921.; //2017LIrnd+2017HIrnd >8.2
-//int events_phi=154861.+141336.;
-events_phi=183925+1628250;
 
+int events_phi=160302.+145921.; //2017LIrnd+2017HIrnd >8.2
+events_phi=183925+1628250;
 
 // lumi
 //float lumi=(10590.+20520.+16080.); // nb^-1
@@ -275,15 +248,12 @@ events_jp18s=456299.00;
 events_jp18f=454525.00;
 events_jp=events_jp16+events_jp17+events_jp18s+events_jp18f;
 //alex
-//events_jp18s=899052.00;
-
 
 events_bh16=1.85676e+06;
 events_bh17=1.95588e+06;
 events_bh18s=1.97545e+06;
 events_bh18f=1.95498e+06;
 events_bh=events_bh16+events_bh17+events_bh18s+events_bh18f;
-
 
 //cross-sections and branching ratios:
 //Mike float xsec_bh=1000. ; // just conversion from pb to nb, the BH x-section is in the weight
